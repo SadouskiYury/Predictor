@@ -1,7 +1,8 @@
 package by.htp.predictor.been;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Queue;
@@ -12,44 +13,63 @@ import java.util.TreeMap;
 public class Client implements Comparable<Client> {
 	private String name;
 	private String surname;
-	private Date dateOfVisit;
-	private Map<Date, String> listStory;
+	private GregorianCalendar dateOfVisit;
+	private GregorianCalendar dateOfNextVisit;
+	private Map<GregorianCalendar, String> listStory;
 
 	public Client() {
-		this.listStory = new TreeMap<>();
+		listStory = new TreeMap<>();
+		dateOfNextVisit = null;
 	}
 
-	public Client(String name, String surname, Date dateOfVisit) {
+	public Client(String name, String surname, GregorianCalendar dateOfVisit) {
 		this();
 		this.name = name;
 		this.surname = surname;
 		this.dateOfVisit = dateOfVisit;
+
 	}
 
-	public Answer chousePredictiongetAnswer() {
-		// if (this.getName()) проверка пользователя
-
-		Map<Prediction, Queue<Answer>> predictions = FortuneTeller.showPredictions();
-		Prediction choused = chousePrediction();
-		Queue<Answer> answers = predictions.get(choused);
-		Answer answer = null;
-		Iterator<Answer> iter = answers.iterator();
-		int i = new Random().nextInt(4);
-		while (i >= 0) {
-			answer = iter.next();
-			i--;
+	public Boolean chousePredictiongetAnswer() {
+		if (cheekClient()) {
+			Map<Prediction, Queue<Answer>> predictions = FortuneTeller.predictionsForUse();
+			Prediction choused = chousePrediction();
+			Queue<Answer> answers = predictions.get(choused);
+			Answer answer = null;
+			Iterator<Answer> iter = answers.iterator();
+			int i = new Random().nextInt(4);
+			while (i >= 0) {
+				answer = iter.next();
+				i--;
+			}
+			dateOfNextVisit = dateOfVisit;
+			dateOfNextVisit.add(Calendar.DAY_OF_MONTH, 7);
+			listStoryAdd(dateOfVisit, predictionResult(choused, answer,dateOfNextVisit));
+			System.out.println(answer.toString());
 		}
+		return true;
 
-		listStoryAdd(dateOfVisit, predictionResult(choused, answer));
+	}
 
-		System.out.println(answer.toString());
-		return answer;
-
+	private Boolean cheekClient() {
+		if (listStory.isEmpty())
+			return true;
+		else if (this.dateOfVisit.after(dateOfNextVisit)) {
+			return true;
+		} else {
+			System.out.println("Sorrt,You can not get the prediction more than 1 time per week ");
+			return false;
+		}
 	}
 
 	public Boolean showListStory() {
-		for (Date s : listStory.keySet())
-			System.out.println(new SimpleDateFormat("dd.MM.yyyy").format(s));
+		if (this.listStory.isEmpty()) {
+			System.out.println("List sory is empty");
+			return listStory.isEmpty();
+		}
+		for (GregorianCalendar s : this.listStory.keySet()) {
+			System.out.println(new SimpleDateFormat("yyyy/MM/dd").format(s.getTime()) + listStory.get(s));
+		}
 		return true;
 	}
 
@@ -81,12 +101,13 @@ public class Client implements Comparable<Client> {
 		return target;
 	}
 
-	private String predictionResult(Prediction prediction, Answer answer) {
-		String predictionResult = prediction.toString() + answer.toString();
+	private String predictionResult(Prediction prediction, Answer answer, GregorianCalendar date) {
+		String predictionResult = " "+prediction.toString() + answer.toString()+" , Your dateOfNextVisit:"
+				+ new SimpleDateFormat("yyyy/MM/dd").format(date.getTime());
 		return predictionResult;
 	}
 
-	private void listStoryAdd(Date date, String result) {
+	private void listStoryAdd(GregorianCalendar date, String result) {
 		this.listStory.put(date, result);
 	}
 
@@ -98,11 +119,11 @@ public class Client implements Comparable<Client> {
 		this.surname = surname;
 	}
 
-	public Date getDateOfVisit() {
+	public GregorianCalendar getDateOfVisit() {
 		return dateOfVisit;
 	}
 
-	public void setDateOfVisit(Date dateOfVisit) {
+	public void setDateOfVisit(GregorianCalendar dateOfVisit) {
 		this.dateOfVisit = dateOfVisit;
 	}
 
@@ -114,18 +135,38 @@ public class Client implements Comparable<Client> {
 		this.name = name;
 	}
 
-	public synchronized Map<Date, String> getListStory() {
+	public Map<GregorianCalendar, String> getListStory() {
 		return listStory;
 	}
 
-	public synchronized void setListStory(Map<Date, String> listStory) {
+	public void setListStory(Map<GregorianCalendar, String> listStory) {
 		this.listStory = listStory;
+	}
+
+	public GregorianCalendar getDateOfNextVisit() {
+		return dateOfNextVisit;
+	}
+
+	public void setDateOfNextVisit(GregorianCalendar dateOfNextVisit) {
+		this.dateOfNextVisit = dateOfNextVisit;
+	}
+
+	@Override
+	public String toString() {
+		return "Client [dateOfVisit= " + new SimpleDateFormat("yyyy/MM/dd").format(dateOfVisit.getTime())
+				+ " ,surname= " + surname + ", name=" + name + "]";
+	}
+
+	@Override
+	public int compareTo(Client o) {
+		return 0;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((dateOfNextVisit == null) ? 0 : dateOfNextVisit.hashCode());
 		result = prime * result + ((dateOfVisit == null) ? 0 : dateOfVisit.hashCode());
 		result = prime * result + ((listStory == null) ? 0 : listStory.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
@@ -142,6 +183,11 @@ public class Client implements Comparable<Client> {
 		if (getClass() != obj.getClass())
 			return false;
 		Client other = (Client) obj;
+		if (dateOfNextVisit == null) {
+			if (other.dateOfNextVisit != null)
+				return false;
+		} else if (!dateOfNextVisit.equals(other.dateOfNextVisit))
+			return false;
 		if (dateOfVisit == null) {
 			if (other.dateOfVisit != null)
 				return false;
@@ -163,17 +209,6 @@ public class Client implements Comparable<Client> {
 		} else if (!surname.equals(other.surname))
 			return false;
 		return true;
-	}
-
-	@Override
-	public String toString() {
-		return "Client [name=" + name + ", surname=" + surname + ", dateOfVisit="
-				+ new SimpleDateFormat("dd.MM.yy").format(dateOfVisit) + "]";
-	}
-
-	@Override
-	public int compareTo(Client o) {
-		return 0;
 	}
 
 }

@@ -1,7 +1,9 @@
 package by.htp.predictor.been;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Comparator;
-import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -15,11 +17,14 @@ public class FortuneTeller {
 	private String name;
 	private double price;
 	private Queue<Client> priorityQueue;
-	private Map<Date, Client> clientList;
+	private Map<Integer, Client> clientList;
 	private NavigableSet<Client> waitingList;
 	static private int counterClientaDay;
+	static private int counterClient;
+	static private GregorianCalendar dateToday;
 
 	public FortuneTeller() {
+		dateToday = new GregorianCalendar();
 		this.priorityQueue = new PriorityQueue<>();
 		this.clientList = new HashMap<>();
 		this.waitingList = new TreeSet<>(new Comparator<Client>() {
@@ -49,30 +54,56 @@ public class FortuneTeller {
 		this.price = price;
 	}
 
-	public void clientList(Client name) {
-		// Map<Date, Client> clientList = new HashMap<>();
-
+	public Boolean showClientList() {
+		if (clientList.isEmpty()) {
+			System.out.println("WaitingList is empty");
+			return clientList.isEmpty();
+		}
+		for (Integer s : clientList.keySet()) {
+			System.out.println(s + ":" + clientList.get(s));
+		}
+		return true;
 	}
 
-	public void waitingList(Client name) {
+	public Boolean showWaitingList() {
+		if (waitingList.isEmpty()) {
+			System.out.println("WaitingList is empty");
+			return waitingList.isEmpty();
+		}
+		for (Client s : waitingList) {
+			System.out.println(s.toString());
+		}
+		return true;
+	}
 
-		// NavigableSet< Client> waitingList = new TreeSet<>();
+	public void deletedFromWaitingList(Client client) {
+		waitingList.remove(client);
+	}
+
+	public Boolean showQueueClient() {
+		if (priorityQueue.isEmpty()) {
+			System.out.println("PriorityQueue is empty");
+			return priorityQueue.isEmpty();
+		}
+		for (Client s : priorityQueue) {
+			System.out.println(s.toString());
+		}
+		return true;
 
 	}
 
 	public void joinQueueClient(Client client) {
-		Date date = new Date();
-		int dateToday = date.getDate();
+		DateFormat dF = new SimpleDateFormat("yyyy/MM/dd");
+
 		if (counterClientaDay <= 10) {
-			if (dateToday == client.getDateOfVisit().getDate()) {
+			if (dF.format(dateToday.getTime()).compareTo(dF.format(client.getDateOfVisit().getTime())) == 0) {
 				priorityQueue.offer(client);
-				clientList.put(client.getDateOfVisit(), client);
 				counterClientaDay++;
 				System.out.println(client.getSurname() + " " + client.getName() + " your number in the Queue : "
 						+ counterClientaDay);
-			} else if (dateToday > client.getDateOfVisit().getDate()) {
-				System.out.println("Your date in the past");
-			} else if (dateToday < client.getDateOfVisit().getDate()) {
+			} else if (dF.format(dateToday.getTime()).compareTo(dF.format(client.getDateOfVisit().getTime())) > 0) {
+				System.out.println("It is impossible, Your date in the past");
+			} else if (dF.format(dateToday.getTime()).compareTo(dF.format(client.getDateOfVisit().getTime())) < 0) {
 				System.out.println("You added in waitingList");
 				waitingList.add(client);
 			}
@@ -85,12 +116,20 @@ public class FortuneTeller {
 	}
 
 	public Client nextClientFromQueue() {
-		Client next = priorityQueue.poll();
-		
+		Client next = this.priorityQueue.poll();
+		clientList.put(++counterClient, next);
+		if (counterClient == 10)
+			counterClientaDay = 0;
 		return next;
 	}
 
-	public static Map showPredictions() {
+	public Boolean showPredictions() {
+		System.out.println("Price for services " + name + ": " + price + "$");
+		Map<Prediction, Queue<Answer>> predictions = predictionsForUse();
+		return true;
+	}
+
+	public static Map<Prediction, Queue<Answer>> predictionsForUse() {
 		Queue<Answer> answerforFirts = new LinkedList<>();
 		answerforFirts.add(new Answer("Fortunately, You will meet yout love today!))"));
 		answerforFirts.add(new Answer("Unfortunately,You will be alone all long your life (("));
@@ -145,11 +184,11 @@ public class FortuneTeller {
 		this.priorityQueue = priorityQueue;
 	}
 
-	public Map<Date, Client> getClientList() {
+	public Map<Integer, Client> getClientList() {
 		return clientList;
 	}
 
-	public void setClientList(Map<Date, Client> clientList) {
+	public void setClientList(Map<Integer, Client> clientList) {
 		this.clientList = clientList;
 	}
 
