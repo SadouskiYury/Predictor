@@ -56,23 +56,25 @@ public class FortuneTeller {
 
 	public Boolean showClientList() {
 		if (clientList.isEmpty()) {
-			System.out.println("WaitingList is empty");
+			System.out.println("WaitingList is empty"+"\n");
 			return clientList.isEmpty();
 		}
 		for (Integer s : clientList.keySet()) {
 			System.out.println(s + ":" + clientList.get(s));
 		}
+		System.out.println("");
 		return true;
 	}
 
 	public Boolean showWaitingList() {
 		if (waitingList.isEmpty()) {
-			System.out.println("WaitingList is empty");
+			System.out.println("WaitingList is empty"+"\n");
 			return waitingList.isEmpty();
 		}
 		for (Client s : waitingList) {
 			System.out.println(s.toString());
 		}
+		System.out.println("");
 		return true;
 	}
 
@@ -82,12 +84,14 @@ public class FortuneTeller {
 
 	public Boolean showQueueClient() {
 		if (priorityQueue.isEmpty()) {
-			System.out.println("PriorityQueue is empty");
+			System.out.println("PriorityQueue is empty"+"\n");
+			
 			return priorityQueue.isEmpty();
 		}
 		for (Client s : priorityQueue) {
 			System.out.println(s.toString());
 		}
+		System.out.println("");
 		return true;
 
 	}
@@ -102,14 +106,14 @@ public class FortuneTeller {
 				System.out.println(client.getSurname() + " " + client.getName() + " your number in the Queue : "
 						+ counterClientaDay);
 			} else if (dF.format(dateToday.getTime()).compareTo(dF.format(client.getDateOfVisit().getTime())) > 0) {
-				System.out.println("It is impossible, Your date in the past");
+				System.out.println("It is impossible, Your date in the past"+"\n");
 			} else if (dF.format(dateToday.getTime()).compareTo(dF.format(client.getDateOfVisit().getTime())) < 0) {
-				System.out.println("You added in waitingList");
+				System.out.println("You added in waitingList"+"\n");
 				waitingList.add(client);
 			}
 
 		} else {
-			System.out.println("Sorry,today the reception is over,You added in waitingList");
+			System.out.println("Sorry,today the reception is over,You added in waitingList"+"\n");
 			waitingList.add(client);
 		}
 
@@ -126,6 +130,7 @@ public class FortuneTeller {
 	public Boolean showPredictions() {
 		System.out.println("Price for services " + name + ": " + price + "$");
 		Map<Prediction, Queue<Answer>> predictions = predictionsForUse();
+		System.out.println("");
 		return true;
 	}
 

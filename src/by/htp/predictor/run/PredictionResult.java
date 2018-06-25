@@ -44,31 +44,31 @@ public class PredictionResult {
 		Client sixth = new Client("Petya", "Sidor", new GregorianCalendar(2018, 05, 24));
 		amanda.joinQueueClient(sixth);
 		amanda.showQueueClient();
-		System.out.println("");
+		
 
 		Client seventh = new Client("Polina", "Shevchenko", new GregorianCalendar(2018, 06, 26));
 		amanda.joinQueueClient(seventh);
 		Client seventh2 = new Client("Violeta", "Mazur", new GregorianCalendar(2018, 05, 28));
 		amanda.joinQueueClient(seventh2);
-		amanda.showWaitingList();
-		System.out.println("");
-		amanda.deletedFromWaitingList(seventh);
-		amanda.showWaitingList();
-		System.out.println("");
-
 		Client eighth = new Client("Yury", "Sadouski", new GregorianCalendar(2018, 05, 25));
 		amanda.joinQueueClient(eighth);
 		Client ninth = new Client("Katya", "Malishko", new GregorianCalendar(2018, 05, 25));
 		amanda.joinQueueClient(ninth);
 		Client tenth = new Client("Pavel", "Olhovik", new GregorianCalendar(2018, 05, 25));
 		amanda.joinQueueClient(tenth);
-
-		first.setDateOfVisit(new GregorianCalendar(2018, 05, 26));
-		amanda.showQueueClient();
+		amanda.showWaitingList();
 		System.out.println("");
-
+		amanda.deletedFromWaitingList(seventh);
+		amanda.showWaitingList();
+		
 		amanda.nextClientFromQueue().chousePredictiongetAnswer();
 		first.showListStory();
+
+
+		first.setDateOfVisit(new GregorianCalendar(2018, 05, 27));
+		first.chousePredictiongetAnswer();
+		first.showListStory();
+		
 		amanda.nextClientFromQueue().chousePredictiongetAnswer();
 		second.showListStory();
 		amanda.nextClientFromQueue().chousePredictiongetAnswer();

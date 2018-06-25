@@ -19,7 +19,7 @@ public class Client implements Comparable<Client> {
 
 	public Client() {
 		listStory = new TreeMap<>();
-		dateOfNextVisit = null;
+		dateOfNextVisit = new GregorianCalendar();
 	}
 
 	public Client(String name, String surname, GregorianCalendar dateOfVisit) {
@@ -42,10 +42,10 @@ public class Client implements Comparable<Client> {
 				answer = iter.next();
 				i--;
 			}
-			dateOfNextVisit = dateOfVisit;
+			dateOfNextVisit.setTime(dateOfVisit.getTime());
 			dateOfNextVisit.add(Calendar.DAY_OF_MONTH, 7);
-			listStoryAdd(dateOfVisit, predictionResult(choused, answer,dateOfNextVisit));
-			System.out.println(answer.toString());
+			listStoryAdd(dateOfVisit, predictionResult(choused, answer, dateOfNextVisit));
+			System.out.println(this.name+"your "+answer.toString() + "\n");
 		}
 		return true;
 
@@ -57,19 +57,22 @@ public class Client implements Comparable<Client> {
 		else if (this.dateOfVisit.after(dateOfNextVisit)) {
 			return true;
 		} else {
-			System.out.println("Sorrt,You can not get the prediction more than 1 time per week ");
+			System.out.println("Sorry,You can not get the prediction more than 1 time per week " );
+			System.out.println("You will visit us: "
+					+ new SimpleDateFormat("yyyy/MM/dd").format(dateOfNextVisit.getTime()) + "\n");
 			return false;
 		}
 	}
 
 	public Boolean showListStory() {
 		if (this.listStory.isEmpty()) {
-			System.out.println("List sory is empty");
+			System.out.println("List is empty" + "\n");
 			return listStory.isEmpty();
 		}
 		for (GregorianCalendar s : this.listStory.keySet()) {
 			System.out.println(new SimpleDateFormat("yyyy/MM/dd").format(s.getTime()) + listStory.get(s));
 		}
+		System.out.println("");
 		return true;
 	}
 
@@ -101,14 +104,14 @@ public class Client implements Comparable<Client> {
 		return target;
 	}
 
-	private String predictionResult(Prediction prediction, Answer answer, GregorianCalendar date) {
-		String predictionResult = " "+prediction.toString() + answer.toString()+" , Your dateOfNextVisit:"
-				+ new SimpleDateFormat("yyyy/MM/dd").format(date.getTime());
+	private String predictionResult(Prediction prediction, Answer answer, GregorianCalendar dateOfNextVisit) {
+		String predictionResult = " " + prediction.toString() + answer.toString() + " , Your dateOfNextVisit:"
+				+ new SimpleDateFormat("yyyy/MM/dd").format(dateOfNextVisit.getTime());
 		return predictionResult;
 	}
 
-	private void listStoryAdd(GregorianCalendar date, String result) {
-		this.listStory.put(date, result);
+	private void listStoryAdd(GregorianCalendar dateOfVisit, String result) {
+		this.listStory.put(dateOfVisit, result);
 	}
 
 	public String getSurname() {
