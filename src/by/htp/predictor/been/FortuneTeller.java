@@ -2,6 +2,7 @@ package by.htp.predictor.been;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -56,9 +57,10 @@ public class FortuneTeller {
 
 	public Boolean showClientList() {
 		if (clientList.isEmpty()) {
-			System.out.println("WaitingList is empty"+"\n");
+			System.out.println("ClientList is empty" + "\n");
 			return clientList.isEmpty();
 		}
+		System.out.println("ClientList");
 		for (Integer s : clientList.keySet()) {
 			System.out.println(s + ":" + clientList.get(s));
 		}
@@ -67,10 +69,12 @@ public class FortuneTeller {
 	}
 
 	public Boolean showWaitingList() {
+
 		if (waitingList.isEmpty()) {
-			System.out.println("WaitingList is empty"+"\n");
+			System.out.println("WaitingList is empty" + "\n");
 			return waitingList.isEmpty();
 		}
+		System.out.println("WaitingList");
 		for (Client s : waitingList) {
 			System.out.println(s.toString());
 		}
@@ -83,9 +87,10 @@ public class FortuneTeller {
 	}
 
 	public Boolean showQueueClient() {
+		System.out.println("QueueClient");
 		if (priorityQueue.isEmpty()) {
-			System.out.println("PriorityQueue is empty"+"\n");
-			
+			System.out.println("PriorityQueue is empty" + "\n");
+
 			return priorityQueue.isEmpty();
 		}
 		for (Client s : priorityQueue) {
@@ -99,21 +104,21 @@ public class FortuneTeller {
 	public void joinQueueClient(Client client) {
 		DateFormat dF = new SimpleDateFormat("yyyy/MM/dd");
 
-		if (counterClientaDay <= 10) {
+		if (counterClientaDay < 10) {
 			if (dF.format(dateToday.getTime()).compareTo(dF.format(client.getDateOfVisit().getTime())) == 0) {
 				priorityQueue.offer(client);
 				counterClientaDay++;
 				System.out.println(client.getSurname() + " " + client.getName() + " your number in the Queue : "
 						+ counterClientaDay);
 			} else if (dF.format(dateToday.getTime()).compareTo(dF.format(client.getDateOfVisit().getTime())) > 0) {
-				System.out.println("It is impossible, Your date in the past"+"\n");
+				System.out.println("It is impossible, Your date in the past" + "\n");
 			} else if (dF.format(dateToday.getTime()).compareTo(dF.format(client.getDateOfVisit().getTime())) < 0) {
-				System.out.println("You added in waitingList"+"\n");
+				System.out.println(client.getName() + " You added in waitingList" + "\n");
 				waitingList.add(client);
 			}
 
 		} else {
-			System.out.println("Sorry,today the reception is over,You added in waitingList"+"\n");
+			System.out.println(client.getName() + " Sorry,today the reception is over,You added in waitingList" + "\n");
 			waitingList.add(client);
 		}
 
@@ -122,8 +127,6 @@ public class FortuneTeller {
 	public Client nextClientFromQueue() {
 		Client next = this.priorityQueue.poll();
 		clientList.put(++counterClient, next);
-		if (counterClient == 10)
-			counterClientaDay = 0;
 		return next;
 	}
 

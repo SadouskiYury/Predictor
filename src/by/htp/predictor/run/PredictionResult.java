@@ -1,5 +1,6 @@
 package by.htp.predictor.run;
 
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import by.htp.predictor.been.Client;
@@ -31,44 +32,41 @@ public class PredictionResult {
 
 		FortuneTeller amanda = new FortuneTeller("Amanda", 25.00);
 		amanda.showPredictions();
-		Client first = new Client("Vasya", "Petrov", new GregorianCalendar(2018, 05, 25));
+		GregorianCalendar dateToday=new GregorianCalendar();
+		
+		Client first = new Client("Vasya", "Petrov", dateToday);
 		amanda.joinQueueClient(first);
-		Client second = new Client("Marina", "Kuzmena", new GregorianCalendar(2018, 05, 25));
+		Client second = new Client("Marina", "Kuzmena",dateToday);
 		amanda.joinQueueClient(second);
-		Client third = new Client("Volodya", "Klimov", new GregorianCalendar(2018, 05, 25));
+		Client third = new Client("Volodya", "Klimov", dateToday);
 		amanda.joinQueueClient(third);
-		Client fourth = new Client("Olya", "Baturina", new GregorianCalendar(2018, 05, 25));
+		Client fourth = new Client("Olya", "Baturina", dateToday);
 		amanda.joinQueueClient(fourth);
-		Client fifth = new Client("Kseniya", "Sobchak", new GregorianCalendar(2018, 05, 25));
+		Client fifth = new Client("Kseniya", "Sobchak", dateToday);
 		amanda.joinQueueClient(fifth);
-		Client sixth = new Client("Petya", "Sidor", new GregorianCalendar(2018, 05, 24));
+		Client sixth = new Client("Petya", "Sidor", dateToday);
 		amanda.joinQueueClient(sixth);
-		amanda.showQueueClient();
-		
-
-		Client seventh = new Client("Polina", "Shevchenko", new GregorianCalendar(2018, 06, 26));
+		Client seventh = new Client("Polina", "Shevchenko", dateToday);
 		amanda.joinQueueClient(seventh);
-		Client seventh2 = new Client("Violeta", "Mazur", new GregorianCalendar(2018, 05, 28));
+		Client seventh2 = new Client("Violeta", "Mazur", dateToday);
 		amanda.joinQueueClient(seventh2);
-		Client eighth = new Client("Yury", "Sadouski", new GregorianCalendar(2018, 05, 25));
+		Client eighth = new Client("Yury", "Sadouski", dateToday);
 		amanda.joinQueueClient(eighth);
-		Client ninth = new Client("Katya", "Malishko", new GregorianCalendar(2018, 05, 25));
+		Client ninth = new Client("Katya", "Malishko", dateToday);
 		amanda.joinQueueClient(ninth);
-		Client tenth = new Client("Pavel", "Olhovik", new GregorianCalendar(2018, 05, 25));
+		Client tenth = new Client("Pavel", "Olhovik",dateToday);
 		amanda.joinQueueClient(tenth);
+		Client eleventh = new Client("Volfram", "Gvozd",dateToday);
+		amanda.joinQueueClient(eleventh);
+
+		amanda.showQueueClient();
+
 		amanda.showWaitingList();
-		System.out.println("");
-		amanda.deletedFromWaitingList(seventh);
+		amanda.deletedFromWaitingList(eleventh);
 		amanda.showWaitingList();
-		
+
 		amanda.nextClientFromQueue().chousePredictiongetAnswer();
 		first.showListStory();
-
-
-		first.setDateOfVisit(new GregorianCalendar(2018, 05, 27));
-		first.chousePredictiongetAnswer();
-		first.showListStory();
-		
 		amanda.nextClientFromQueue().chousePredictiongetAnswer();
 		second.showListStory();
 		amanda.nextClientFromQueue().chousePredictiongetAnswer();
@@ -76,11 +74,10 @@ public class PredictionResult {
 		amanda.nextClientFromQueue().chousePredictiongetAnswer();
 		System.out.println("");
 		amanda.showClientList();
-
-	
-
-		
-
+		dateToday.add(Calendar.DAY_OF_MONTH, 3);
+		first.setDateOfVisit(dateToday);
+		first.chousePredictiongetAnswer();
+		first.showListStory();
 	}
 
 }

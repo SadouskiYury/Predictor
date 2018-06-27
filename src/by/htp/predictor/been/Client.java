@@ -45,7 +45,7 @@ public class Client implements Comparable<Client> {
 			dateOfNextVisit.setTime(dateOfVisit.getTime());
 			dateOfNextVisit.add(Calendar.DAY_OF_MONTH, 7);
 			listStoryAdd(dateOfVisit, predictionResult(choused, answer, dateOfNextVisit));
-			System.out.println(this.name+"your "+answer.toString() + "\n");
+			System.out.println(this.name+" your "+answer.toString() + "\n");
 		}
 		return true;
 
@@ -69,6 +69,7 @@ public class Client implements Comparable<Client> {
 			System.out.println("List is empty" + "\n");
 			return listStory.isEmpty();
 		}
+		System.out.println("ListStory");
 		for (GregorianCalendar s : this.listStory.keySet()) {
 			System.out.println(new SimpleDateFormat("yyyy/MM/dd").format(s.getTime()) + listStory.get(s));
 		}
@@ -162,7 +163,8 @@ public class Client implements Comparable<Client> {
 
 	@Override
 	public int compareTo(Client o) {
-		return 0;
+		
+		return this.dateOfVisit.compareTo(o.dateOfVisit);
 	}
 
 	@Override
