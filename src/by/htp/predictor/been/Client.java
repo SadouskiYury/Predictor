@@ -32,8 +32,8 @@ public class Client implements Comparable<Client> {
 
 	public Boolean chousePredictiongetAnswer() {
 		if (cheekClient()) {
-			Map<Prediction, Queue<Answer>> predictions = FortuneTeller.predictionsForUse();
-			Prediction choused = chousePrediction();
+			Map<PredictionEnum, Queue<Answer>> predictions = FortuneTeller.predictionsForUse();
+			PredictionEnum choused = chousePrediction();
 			Queue<Answer> answers = predictions.get(choused);
 			Answer answer = null;
 			Iterator<Answer> iter = answers.iterator();
@@ -45,7 +45,7 @@ public class Client implements Comparable<Client> {
 			dateOfNextVisit.setTime(dateOfVisit.getTime());
 			dateOfNextVisit.add(Calendar.DAY_OF_MONTH, 7);
 			listStoryAdd(dateOfVisit, predictionResult(choused, answer, dateOfNextVisit));
-			System.out.println(this.name+" your "+answer.toString() + "\n");
+			System.out.println(this.name + " your " + answer.toString() + "\n");
 		}
 		return true;
 
@@ -57,7 +57,7 @@ public class Client implements Comparable<Client> {
 		else if (this.dateOfVisit.after(dateOfNextVisit)) {
 			return true;
 		} else {
-			System.out.println("Sorry,You can not get the prediction more than 1 time per week " );
+			System.out.println("Sorry,You can not get the prediction more than 1 time per week ");
 			System.out.println("You will visit us: "
 					+ new SimpleDateFormat("yyyy/MM/dd").format(dateOfNextVisit.getTime()) + "\n");
 			return false;
@@ -77,21 +77,21 @@ public class Client implements Comparable<Client> {
 		return true;
 	}
 
-	private Prediction chousePrediction() {
+	private PredictionEnum chousePrediction() {
 		Scanner sc = new Scanner(System.in);
 		System.out.println("Select prediction [1-3]:");
 		String numberOfPrediction = sc.next();
-		Prediction target = new Prediction();
+		PredictionEnum target = PredictionEnum.LOVE;
 		flag: while (true) {
 			switch (numberOfPrediction) {
 			case "1":
-				target = new Prediction("Love");
+				target = PredictionEnum.LOVE;
 				break flag;
 			case "2":
-				target = new Prediction("Money");
+				target = PredictionEnum.MONEY;
 				break flag;
 			case "3":
-				target = new Prediction("Accommodation");
+				target = PredictionEnum.ACCOMMODATION;
 				break flag;
 			default:
 				System.out.println("This target impossible");
@@ -105,8 +105,8 @@ public class Client implements Comparable<Client> {
 		return target;
 	}
 
-	private String predictionResult(Prediction prediction, Answer answer, GregorianCalendar dateOfNextVisit) {
-		String predictionResult = " " + prediction.toString() + answer.toString() + " , Your dateOfNextVisit:"
+	private String predictionResult(PredictionEnum prediction, Answer answer, GregorianCalendar dateOfNextVisit) {
+		String predictionResult = " Prediction <" + prediction.getValue()+"> " + answer.toString() + " , Your dateOfNextVisit:"
 				+ new SimpleDateFormat("yyyy/MM/dd").format(dateOfNextVisit.getTime());
 		return predictionResult;
 	}
@@ -163,7 +163,7 @@ public class Client implements Comparable<Client> {
 
 	@Override
 	public int compareTo(Client o) {
-		
+
 		return this.dateOfVisit.compareTo(o.dateOfVisit);
 	}
 

@@ -2,7 +2,6 @@ package by.htp.predictor.been;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Comparator;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -132,12 +131,12 @@ public class FortuneTeller {
 
 	public Boolean showPredictions() {
 		System.out.println("Price for services " + name + ": " + price + "$");
-		Map<Prediction, Queue<Answer>> predictions = predictionsForUse();
+		Map<PredictionEnum, Queue<Answer>> predictions = predictionsForUse();
 		System.out.println("");
 		return true;
 	}
 
-	public static Map<Prediction, Queue<Answer>> predictionsForUse() {
+	public static Map<PredictionEnum, Queue<Answer>> predictionsForUse() {
 		Queue<Answer> answerforFirts = new LinkedList<>();
 		answerforFirts.add(new Answer("Fortunately, You will meet yout love today!))"));
 		answerforFirts.add(new Answer("Unfortunately,You will be alone all long your life (("));
@@ -155,14 +154,16 @@ public class FortuneTeller {
 		answerForThird.add(new Answer("Unfortunately,You will be live in the street((( "));
 		answerForThird.add(new Answer("You will get a new flat!!"));
 		answerForThird.add(new Answer("Yoy will have a small house in the vilage!"));
+		PredictionEnum prediction1=PredictionEnum.LOVE;
+		PredictionEnum prediction2=PredictionEnum.MONEY;
+		PredictionEnum prediction3=PredictionEnum.ACCOMMODATION;
+		Map<PredictionEnum, Queue<Answer>> predictions = new LinkedHashMap<>();
+		predictions.put(prediction1, answerforFirts);
+		predictions.put(prediction2, answerForSecond);
+		predictions.put(prediction3, answerForThird);
 
-		Map<Prediction, Queue<Answer>> predictions = new LinkedHashMap<>();
-		predictions.put(new Prediction(1, "Love"), answerforFirts);
-		predictions.put(new Prediction(2, "Money"), answerForSecond);
-		predictions.put(new Prediction(3, "Accommodation"), answerForThird);
-
-		for (Prediction target : predictions.keySet()) {
-			System.out.println(target);
+		for (PredictionEnum target : predictions.keySet()) {
+			System.out.println("["+target.getNumber()+"]"+target.getValue());
 		}
 
 		return predictions;
